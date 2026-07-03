@@ -253,7 +253,8 @@ static int aicwf_sdio_resume(struct device *dev)
 }
 
 static const struct sdio_device_id aicwf_sdmmc_ids[] = {
-    {SDIO_DEVICE_CLASS(SDIO_CLASS_WLAN)},
+    { SDIO_DEVICE(SDIO_VENDOR_ID_AIC, SDIO_DEVICE_ID_AIC) },
+    { SDIO_DEVICE_CLASS(SDIO_CLASS_WLAN) },  /* fallback */
     { },
 };
 
@@ -1070,9 +1071,7 @@ void aicwf_sdio_hal_irqhandler(struct sdio_func *func)
             pkt = aicwf_sdio_readframes(sdiodev);
         }
     } else {
-	#ifndef CONFIG_PLATFORM_ALLWINNER
-        sdio_err("Interrupt but no data\n");
-	#endif
+        sdio_dbg("Interrupt but no data (intstatus=0)\n");
     }
 
     if (pkt)
@@ -1146,22 +1145,19 @@ int aicwf_sdio_func_init(struct aic_sdio_dev *sdiodev)
     host = sdiodev->func->card->host;
 
     sdio_claim_host(sdiodev->func);
+    ret = sdio_enable_func(sdiodev->func);
+    if (ret < 0) {
+        sdio_err("enable func fail %d.\n", ret);
+        sdio_release_host(sdiodev->func);
+        return ret;
+    }
     ret = sdio_set_block_size(sdiodev->func, SDIOWIFI_FUNC_BLOCKSIZE);
     if (ret < 0) {
         sdio_err("set blocksize fail %d\n", ret);
         sdio_release_host(sdiodev->func);
         return ret;
     }
-    ret = sdio_enable_func(sdiodev->func);
-    if (ret < 0) {
-        sdio_release_host(sdiodev->func);
-        sdio_err("enable func fail %d.\n", ret);
-    }
-
-    host->ios.clock = 60000000;
-    host->ops->set_ios(host, &host->ios);
     sdio_release_host(sdiodev->func);
-    sdio_dbg("Set SDIO Clock %d MHz\n",host->ios.clock/1000000);
 
     ret = aicwf_sdio_writeb(sdiodev, SDIOWIFI_REGISTER_BLOCK, block_bit0);
     if (ret < 0) {

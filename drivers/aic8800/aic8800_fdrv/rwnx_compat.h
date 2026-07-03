@@ -28,6 +28,11 @@
 #endif
 
 /* Generic */
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 15, 0)
+#define timer_delete_sync(t)  del_timer_sync(t)
+#define timer_delete(t)       del_timer(t)
+#endif
+
 #if LINUX_VERSION_CODE < KERNEL_VERSION(4, 9, 0)
 #define __bf_shf(x) (__builtin_ffsll(x) - 1)
 #define FIELD_PREP(_mask, _val) \
