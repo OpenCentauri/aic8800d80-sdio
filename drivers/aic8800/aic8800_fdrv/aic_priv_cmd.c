@@ -285,15 +285,10 @@ static int aic_priv_cmd_set_tx (struct rwnx_hw *rwnx_hw, int argc, char *argv[],
 	txpwr_loss_conf_t *txpwr_loss;
 	txpwr_loss = &txpwr_loss_tmp;
 #endif
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	if (argc < 6)
@@ -447,15 +442,10 @@ static int aic_priv_cmd_set_set_power (struct rwnx_hw *rwnx_hw, int argc, char *
 	u8_l ana_pwr;
 	u8_l dig_pwr;
 	u8_l pwr;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	if (dev->chipid == PRODUCT_ID_AIC8801) {
@@ -548,15 +538,10 @@ static int aic_priv_cmd_set_freq_cal_fine (struct rwnx_hw *rwnx_hw, int argc, ch
 static int aic_priv_cmd_get_freq_cal (struct rwnx_hw *rwnx_hw, int argc, char *argv[], char *command)
 {
 	u32_l val;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	rwnx_send_rftest_req(rwnx_hw, GET_FREQ_CAL, 0, NULL, &cfm);
@@ -592,15 +577,10 @@ static int aic_priv_cmd_set_mac_addr (struct rwnx_hw *rwnx_hw, int argc, char *a
 static int aic_priv_cmd_get_mac_addr (struct rwnx_hw *rwnx_hw, int argc, char *argv[], char *command)
 {
 	u32_l addr0, addr1;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	rwnx_send_rftest_req(rwnx_hw, GET_MAC_ADDR, 0, NULL, &cfm);
@@ -638,15 +618,10 @@ static int aic_priv_cmd_set_bt_mac_addr (struct rwnx_hw *rwnx_hw, int argc, char
 static int aic_priv_cmd_get_bt_mac_addr (struct rwnx_hw *rwnx_hw, int argc, char *argv[], char *command)
 {
 	u32_l addr0, addr1;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	rwnx_send_rftest_req(rwnx_hw, GET_BT_MAC_ADDR, 0, NULL, &cfm);
@@ -666,15 +641,10 @@ static int aic_priv_cmd_get_bt_mac_addr (struct rwnx_hw *rwnx_hw, int argc, char
 static int aic_priv_cmd_set_vendor_info (struct rwnx_hw *rwnx_hw, int argc, char *argv[], char *command)
 {
 	u8_l vendor_info;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	vendor_info = command_strtoul(argv[1], NULL, 16);
@@ -692,15 +662,10 @@ static int aic_priv_cmd_set_vendor_info (struct rwnx_hw *rwnx_hw, int argc, char
 
 static int aic_priv_cmd_get_vendor_info (struct rwnx_hw *rwnx_hw, int argc, char *argv[], char *command)
 {
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	rwnx_send_rftest_req(rwnx_hw, GET_VENDOR_INFO, 0, NULL, &cfm);
@@ -731,15 +696,10 @@ static int aic_priv_cmd_rdwr_pwrmm (struct rwnx_hw *rwnx_hw, int argc, char *arg
 static int aic_priv_cmd_rdwr_pwridx (struct rwnx_hw *rwnx_hw, int argc, char *argv[], char *command)
 {
 	u8_l func = 0;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	if (dev->chipid != PRODUCT_ID_AIC8801){
@@ -771,15 +731,10 @@ static int aic_priv_cmd_rdwr_pwridx (struct rwnx_hw *rwnx_hw, int argc, char *ar
 static int aic_priv_cmd_rdwr_pwrlvl (struct rwnx_hw *rwnx_hw, int argc, char *argv[], char *command)
 {
 	u8_l func = 0;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	if (dev->chipid == PRODUCT_ID_AIC8801){
@@ -848,15 +803,10 @@ static int aic_priv_cmd_rdwr_pwrofst (struct rwnx_hw *rwnx_hw, int argc, char *a
 {
 	u8_l func = 0;
 	int res_len = 0;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	if (argc > 1) {
@@ -962,15 +912,10 @@ static int aic_priv_cmd_rdwr_efuse_pwrofst (struct rwnx_hw *rwnx_hw, int argc, c
 {
 	u8_l func = 0;
 	int res_len = 0;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	if (argc > 1) {
@@ -1479,15 +1424,10 @@ static int aic_priv_cmd_rdwr_pwradd2x (struct rwnx_hw *rwnx_hw, int argc, char *
 {
 	u8_l func = 0;
 	int8_t pwradd2x_in = 0;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	if (dev->chipid != PRODUCT_ID_AIC8800D81) {
@@ -1524,15 +1464,10 @@ static int aic_priv_cmd_rdwr_efuse_pwradd2x (struct rwnx_hw *rwnx_hw, int argc, 
 {
 	u8_l func = 0;
 	int8_t pwradd2x_in = 0;
-#ifdef AICWF_SDIO_SUPPORT
-	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
-#ifdef AICWF_USB_SUPPORT
 #ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
 #else
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
-#endif
 #endif
 
 	if (dev->chipid != PRODUCT_ID_AIC8800D81) {

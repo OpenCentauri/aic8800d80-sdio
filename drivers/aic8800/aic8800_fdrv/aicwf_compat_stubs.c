@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-only
 /*
  * aicwf_compat_stubs.c
  *
@@ -34,6 +35,8 @@ u32 get_flash_bin_crc(void)
 
 void get_fw_path(char *fw_path)
 {
+    if (fw_path)
+        fw_path[0] = '\0';
 }
 
 void get_userconfig_txpwr_idx(txpwr_idx_conf_t *txpwr_idx)

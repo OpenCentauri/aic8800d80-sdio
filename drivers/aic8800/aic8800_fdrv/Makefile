@@ -197,14 +197,9 @@ $(MODULE_NAME)-y := \
 	aicwf_compat_8800dln.o
 
 # When aic_load_fw is disabled, provide the symbols it normally exports.
-ifeq ($(CONFIG_AIC_LOADFW_SUPPORT),)
-CONFIG_AIC_LOADFW_SUPPORT = m
-endif
-ifneq ($(CONFIG_AIC_LOADFW_SUPPORT),y)
-ifneq ($(CONFIG_AIC_LOADFW_SUPPORT),m)
+ifeq ($(CONFIG_AIC_LOADFW_SUPPORT),n)
 $(MODULE_NAME)-y += aicwf_compat_stubs.o
 ccflags-y += -DAIC_LOADFW_STUBS
-endif
 endif
 
 $(MODULE_NAME)-$(CONFIG_BAND_STEERING)    += aicwf_manager.o    \
