@@ -2221,7 +2221,11 @@ void aicwf_txpwer_per_sta_worker(struct work_struct *work)
 	sta = container_of(work, struct rwnx_sta, per_pwr_work);
 
 	AICWFDBG(LOGINFO, "per_sta_worker: idx: %d\n", sta->sta_idx);
+	#ifdef AICWF_USB_SUPPORT
 	rwnx_send_txpwr_per_sta_req(g_rwnx_plat->usbdev->rwnx_hw, sta);
+#else
+	rwnx_send_txpwr_per_sta_req(g_rwnx_plat->sdiodev->rwnx_hw, sta);
+#endif
 }
 #endif
 

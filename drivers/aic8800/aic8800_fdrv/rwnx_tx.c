@@ -705,7 +705,11 @@ void rwnx_tx_push(struct rwnx_hw *rwnx_hw, struct rwnx_txhdr *txhdr, int flags)
         sw_txhdr->rwnx_vif->net_stats.tx_bytes += sw_txhdr->frame_len;
         rwnx_hw->stats.last_tx = jiffies;
     }
-    aicwf_frame_tx((void *)(rwnx_hw->usbdev), skb);
+    #ifdef AICWF_USB_SUPPORT
+aicwf_frame_tx((void *)(rwnx_hw->usbdev), skb);
+#else
+aicwf_frame_tx((void *)(rwnx_hw->sdiodev), skb);
+#endif
 #endif
 #endif
     #if 0
@@ -2351,7 +2355,7 @@ int rwnx_txdatacfm(void *pthis, void *host_id)
     }
 
 #ifdef AICWF_USB_SUPPORT
-    if (rwnx_hw->usbdev->state == USB_DOWN_ST) {
+    if (rwnx_bus_is_down(rwnx_hw)) {
         headroom = sw_txhdr->headroom;
         kmem_cache_free(rwnx_hw->sw_txhdr_cache, sw_txhdr);
         skb_pull(skb, headroom);

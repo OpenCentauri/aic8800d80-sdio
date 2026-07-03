@@ -860,6 +860,7 @@ int rwnx_txq_queue_skb(struct sk_buff *skb, struct rwnx_txq *txq,
 #ifndef CONFIG_ONE_TXQ
     /* If too many buffer are queued for this TXQ stop netdev queue */
     spin_lock_irqsave(&rwnx_hw->usbdev->tx_flow_lock, flags);
+#ifdef AICWF_USB_SUPPORT
     if ((txq->ndev_idx != NDEV_NO_TXQ) && !rwnx_hw->usbdev->tbusy && ((skb_queue_len(&txq->sk_list) > RWNX_NDEV_FLOW_CTRL_STOP))) {
         txq->status |= RWNX_TXQ_NDEV_FLOW_CTRL;
         netif_stop_subqueue(txq->ndev, txq->ndev_idx);
@@ -868,6 +869,7 @@ int rwnx_txq_queue_skb(struct sk_buff *skb, struct rwnx_txq *txq,
 #endif
     }
     spin_unlock_irqrestore(&rwnx_hw->usbdev->tx_flow_lock, flags);
+#endif
 
 #endif /* CONFIG_ONE_TXQ */
 #else /* ! CONFIG_RWNX_FULLMAC */

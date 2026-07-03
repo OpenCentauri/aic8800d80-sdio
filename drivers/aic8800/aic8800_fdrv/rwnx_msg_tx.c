@@ -397,7 +397,7 @@ static int rwnx_send_msg(struct rwnx_hw *rwnx_hw, const void *msg_params,
     __func__, reqid, RWNX_ID2STR(reqid), reqcfm, (int)in_softirq(), (int)in_atomic());
 
 #ifdef AICWF_USB_SUPPORT
-    if (rwnx_hw->usbdev->state == USB_DOWN_ST) {
+    if (rwnx_bus_is_down(rwnx_hw)) {
         rwnx_msg_free(rwnx_hw, msg_params);
 		AICWFDBG(LOGERROR, "%s bus is down\n", __func__);
         return 0;
@@ -504,7 +504,7 @@ static int rwnx_send_msg1(struct rwnx_hw *rwnx_hw, const void *msg_params,
 	AICWFDBG(LOGDEBUG,"%s (%d)%s reqcfm:%d in_softirq:%d in_atomic:%d\r\n",
     	__func__, reqid, RWNX_ID2STR(reqid), reqcfm, (int)in_softirq(), (int)in_atomic());
 
-    if (rwnx_hw->usbdev->state == USB_DOWN_ST) {
+    if (rwnx_bus_is_down(rwnx_hw)) {
         rwnx_msg_free(rwnx_hw, msg_params);
 		AICWFDBG(LOGERROR, "%s bus is down\n", __func__);
         return 0;

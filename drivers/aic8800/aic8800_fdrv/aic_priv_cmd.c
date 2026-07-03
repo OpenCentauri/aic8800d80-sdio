@@ -289,7 +289,11 @@ static int aic_priv_cmd_set_tx (struct rwnx_hw *rwnx_hw, int argc, char *argv[],
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	if (argc < 6)
@@ -447,7 +451,11 @@ static int aic_priv_cmd_set_set_power (struct rwnx_hw *rwnx_hw, int argc, char *
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	if (dev->chipid == PRODUCT_ID_AIC8801) {
@@ -544,7 +552,11 @@ static int aic_priv_cmd_get_freq_cal (struct rwnx_hw *rwnx_hw, int argc, char *a
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	rwnx_send_rftest_req(rwnx_hw, GET_FREQ_CAL, 0, NULL, &cfm);
@@ -584,7 +596,11 @@ static int aic_priv_cmd_get_mac_addr (struct rwnx_hw *rwnx_hw, int argc, char *a
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	rwnx_send_rftest_req(rwnx_hw, GET_MAC_ADDR, 0, NULL, &cfm);
@@ -626,7 +642,11 @@ static int aic_priv_cmd_get_bt_mac_addr (struct rwnx_hw *rwnx_hw, int argc, char
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	rwnx_send_rftest_req(rwnx_hw, GET_BT_MAC_ADDR, 0, NULL, &cfm);
@@ -650,7 +670,11 @@ static int aic_priv_cmd_set_vendor_info (struct rwnx_hw *rwnx_hw, int argc, char
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	vendor_info = command_strtoul(argv[1], NULL, 16);
@@ -672,7 +696,11 @@ static int aic_priv_cmd_get_vendor_info (struct rwnx_hw *rwnx_hw, int argc, char
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	rwnx_send_rftest_req(rwnx_hw, GET_VENDOR_INFO, 0, NULL, &cfm);
@@ -707,7 +735,11 @@ static int aic_priv_cmd_rdwr_pwridx (struct rwnx_hw *rwnx_hw, int argc, char *ar
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	if (dev->chipid != PRODUCT_ID_AIC8801){
@@ -743,7 +775,11 @@ static int aic_priv_cmd_rdwr_pwrlvl (struct rwnx_hw *rwnx_hw, int argc, char *ar
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	if (dev->chipid == PRODUCT_ID_AIC8801){
@@ -816,7 +852,11 @@ static int aic_priv_cmd_rdwr_pwrofst (struct rwnx_hw *rwnx_hw, int argc, char *a
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	if (argc > 1) {
@@ -926,7 +966,11 @@ static int aic_priv_cmd_rdwr_efuse_pwrofst (struct rwnx_hw *rwnx_hw, int argc, c
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	if (argc > 1) {
@@ -1439,7 +1483,11 @@ static int aic_priv_cmd_rdwr_pwradd2x (struct rwnx_hw *rwnx_hw, int argc, char *
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	if (dev->chipid != PRODUCT_ID_AIC8800D81) {
@@ -1480,7 +1528,11 @@ static int aic_priv_cmd_rdwr_efuse_pwradd2x (struct rwnx_hw *rwnx_hw, int argc, 
 	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
 #endif
 #ifdef AICWF_USB_SUPPORT
+#ifdef AICWF_USB_SUPPORT
 	struct aic_usb_dev *dev = g_rwnx_plat->usbdev;
+#else
+	struct aic_sdio_dev *dev = g_rwnx_plat->sdiodev;
+#endif
 #endif
 
 	if (dev->chipid != PRODUCT_ID_AIC8800D81) {
@@ -2109,7 +2161,11 @@ int android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
 		ret = 0;
 		goto exit;
 	}else if(!strncasecmp(command, CMD_SET_TESTMODE, strlen(CMD_SET_TESTMODE))){
+		#ifdef AICWF_USB_SUPPORT
 		if(g_rwnx_plat && g_rwnx_plat->usbdev->rwnx_hw){
+#else
+		if(g_rwnx_plat && g_rwnx_plat->sdiodev->rwnx_hw){
+#endif
 			if (rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW ||
 				(rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC) ||
 				(rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DLN) ||
@@ -2118,15 +2174,27 @@ int android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
 				(rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800D89X2) ||
 				(rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800D80N)){
 				set_testmode(!testmode);
-				rwnx_send_reboot(g_rwnx_plat->usbdev->rwnx_hw);
+				#ifdef AICWF_USB_SUPPORT
+			rwnx_send_reboot(g_rwnx_plat->usbdev->rwnx_hw);
+#else
+			rwnx_send_reboot(g_rwnx_plat->sdiodev->rwnx_hw);
+#endif
 			}
 		}
 		ret = 0;
 		goto exit;
 	}else if(!strncasecmp(command, CMD_SET_BLE_WAKE, strlen(CMD_SET_BLE_WAKE))){
+		#ifdef AICWF_USB_SUPPORT
 		if(g_rwnx_plat && g_rwnx_plat->usbdev->rwnx_hw){
+#else
+		if(g_rwnx_plat && g_rwnx_plat->sdiodev->rwnx_hw){
+#endif
 			set_testmode(5);
+			#ifdef AICWF_USB_SUPPORT
 			rwnx_send_reboot(g_rwnx_plat->usbdev->rwnx_hw);
+#else
+			rwnx_send_reboot(g_rwnx_plat->sdiodev->rwnx_hw);
+#endif
 		}
 		ret = 0;
 		goto exit;

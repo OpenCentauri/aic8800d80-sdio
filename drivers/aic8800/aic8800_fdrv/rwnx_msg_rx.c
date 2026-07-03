@@ -1245,7 +1245,11 @@ static inline int rwnx_rx_sm_disconnect_ind(struct rwnx_hw *rwnx_hw,
 #ifdef AICWF_SDIO_SUPPORT
     rx_priv = rwnx_hw->sdiodev->rx_priv;
 #else
+    #ifdef AICWF_USB_SUPPORT
     rx_priv = rwnx_hw->usbdev->rx_priv;
+#else
+    rx_priv = rwnx_hw->sdiodev->rx_priv;
+#endif
 #endif
     if((rwnx_vif->wdev.iftype == NL80211_IFTYPE_STATION) || (rwnx_vif->wdev.iftype == NL80211_IFTYPE_P2P_CLIENT)) {
         macaddr = (u8*)rwnx_vif->ndev->dev_addr;

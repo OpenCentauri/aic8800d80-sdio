@@ -74,11 +74,16 @@ void rwnx_wakeup_lock_timeout(struct wakeup_source *ws, unsigned int msec)
 void aicwf_wakeup_lock_init(struct rwnx_hw *rwnx_hw)
 {
 	#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 16, 0)
-	 struct aic_usb_dev *usbdev = rwnx_hw->usbdev;
-	rwnx_hw->ws_tx = rwnx_wakeup_register(usbdev->dev, "rwnx_tx_wakelock");
-	rwnx_hw->ws_rx = rwnx_wakeup_register(usbdev->dev,"rwnx_rx_wakelock");
-	rwnx_hw->ws_irqrx = rwnx_wakeup_register(usbdev->dev, "rwnx_irqrx_wakelock");
-	rwnx_hw->ws_pwrctrl = rwnx_wakeup_register(usbdev->dev, "rwnx_pwrcrl_wakelock");
+	struct device *dev;
+#ifdef AICWF_SDIO_SUPPORT
+	dev = rwnx_hw->sdiodev->dev;
+#else
+	dev = rwnx_hw->usbdev->dev;
+#endif
+	rwnx_hw->ws_tx = rwnx_wakeup_register(dev, "rwnx_tx_wakelock");
+	rwnx_hw->ws_rx = rwnx_wakeup_register(dev, "rwnx_rx_wakelock");
+	rwnx_hw->ws_irqrx = rwnx_wakeup_register(dev, "rwnx_irqrx_wakelock");
+	rwnx_hw->ws_pwrctrl = rwnx_wakeup_register(dev, "rwnx_pwrcrl_wakelock");
 	#else
 	rwnx_hw->ws_tx = rwnx_wakeup_init("rwnx_tx_wakelock");
 	rwnx_hw->ws_rx = rwnx_wakeup_init("rwnx_rx_wakelock");

@@ -56,6 +56,14 @@ static inline int rwnx_get_plat_chipid(void)
 {
 	return g_rwnx_plat->usbdev->chipid;
 }
+static inline int rwnx_bus_is_down(struct rwnx_hw *rwnx_hw)
+{
+	return rwnx_hw->usbdev->state == USB_DOWN_ST;
+}
+static inline int rwnx_plat_bus_is_down(struct rwnx_plat *plat)
+{
+	return plat->usbdev->state == USB_DOWN_ST;
+}
 #elif defined(AICWF_SDIO_SUPPORT)
 static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
 {
@@ -65,6 +73,14 @@ static inline int rwnx_get_plat_chipid(void)
 {
 	return g_rwnx_plat->sdiodev->chipid;
 }
+static inline int rwnx_bus_is_down(struct rwnx_hw *rwnx_hw)
+{
+	return rwnx_hw->sdiodev->bus_if->state == BUS_DOWN_ST;
+}
+static inline int rwnx_plat_bus_is_down(struct rwnx_plat *plat)
+{
+	return plat->sdiodev->bus_if->state == BUS_DOWN_ST;
+}
 #else
 static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
 {
@@ -73,6 +89,14 @@ static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
 static inline int rwnx_get_plat_chipid(void)
 {
 	return PRODUCT_ID_AIC8800D80N;
+}
+static inline int rwnx_bus_is_down(struct rwnx_hw *rwnx_hw)
+{
+	return 0;
+}
+static inline int rwnx_plat_bus_is_down(struct rwnx_plat *plat)
+{
+	return 0;
 }
 #endif
 

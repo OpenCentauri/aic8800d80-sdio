@@ -1895,7 +1895,7 @@ void reord_timeout_handler (struct timer_list *t)
 	AICWFDBG(LOGTRACE, "%s Enter \r\n", __func__);
 
 
-	if (g_rwnx_plat->usbdev->state == USB_DOWN_ST) {
+	if (rwnx_plat_bus_is_down(g_rwnx_plat)) {
         usb_err("bus is down\n");
         return;
 	}
