@@ -124,7 +124,8 @@ static int aicwf_sdio_probe(struct sdio_func *func,
     if(func->num != 1) {
         return err;
     }
-    if (func->vendor != SDIO_VENDOR_ID_AIC) {
+    if (func->vendor != SDIO_VENDOR_ID_AIC &&
+        func->vendor != SDIO_VENDOR_ID_AIC_ALT) {
         dev_err(&func->dev, "unsupported SDIO device %04x:%04x\n",
                 func->vendor, func->device);
         return err;
@@ -254,6 +255,7 @@ static int aicwf_sdio_resume(struct device *dev)
 
 static const struct sdio_device_id aicwf_sdmmc_ids[] = {
     { SDIO_DEVICE(SDIO_VENDOR_ID_AIC, SDIO_DEVICE_ID_AIC) },
+    { SDIO_DEVICE(SDIO_VENDOR_ID_AIC_ALT, SDIO_DEVICE_ID_AIC_ALT) },
     { SDIO_DEVICE_CLASS(SDIO_CLASS_WLAN) },  /* fallback for D80N variants */
     { },
 };
