@@ -20,6 +20,7 @@
 
 #define SDIO_VENDOR_ID_AIC              0x8800
 #define SDIO_DEVICE_ID_AIC              0x0001
+/* CC2 D80N variants appear as vendor c8a1; the class-match fallback handles them. */
 #define SDIOWIFI_BYTEMODE_LEN_REG       0x02
 #define SDIOWIFI_INTR_CONFIG_REG	    0x04
 #define SDIOWIFI_SLEEP_REG	            0x05

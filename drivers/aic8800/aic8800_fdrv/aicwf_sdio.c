@@ -254,7 +254,7 @@ static int aicwf_sdio_resume(struct device *dev)
 
 static const struct sdio_device_id aicwf_sdmmc_ids[] = {
     { SDIO_DEVICE(SDIO_VENDOR_ID_AIC, SDIO_DEVICE_ID_AIC) },
-    { SDIO_DEVICE_CLASS(SDIO_CLASS_WLAN) },  /* fallback */
+    { SDIO_DEVICE_CLASS(SDIO_CLASS_WLAN) },  /* fallback for D80N variants */
     { },
 };
 
@@ -1228,8 +1228,10 @@ void *aicwf_sdio_bus_init(struct aic_sdio_dev *sdiodev)
     timer_setup(&sdiodev->timer, aicwf_sdio_bus_pwrctl, 0);
 #endif
     init_completion(&sdiodev->pwrctrl_trgg);
-#ifdef AICWF_SDIO_SUPPORT
+#ifdef CONFIG_SDIO_PWRCTRL
     sdiodev->pwrctl_tsk = kthread_run(aicwf_sdio_pwrctl_thread, sdiodev, "aicwf_pwrctl");
+#else
+    sdiodev->pwrctl_tsk = NULL;
 #endif
     if (IS_ERR(sdiodev->pwrctl_tsk)) {
         sdiodev->pwrctl_tsk = NULL;

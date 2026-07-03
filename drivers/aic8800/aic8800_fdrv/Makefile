@@ -372,9 +372,15 @@ ccflags-$(CONFIG_TEMP_CONTROL) += -DCONFIG_TEMP_CONTROL
 ccflags-$(CONFIG_POWER_LIMIT) += -DCONFIG_POWER_LIMIT
 ccflags-$(CONFIG_EXT_FEM_8800DCDW) += -DCONFIG_EXT_FEM_8800DCDW
 ccflags-$(CONFIG_WOWLAN) += -DCONFIG_WOWLAN
-MAKEFLAGS +=-j$(shell nproc)
+MAKEFLAGS +=-j$(shell nproc 2>/dev/null || echo 1)
 
 # Platform support list
+# Note: CONFIG_PLATFORM_ALLWINNER_R528 is intentionally not enabled in the
+# Yocto recipe. The upstream Linux kernel does not export the Android BSP
+# symbols (sunxi_wlan_set_power, sunxi_mmc_rescan_card) that this driver's
+# Allwinner power-on path expects. SDIO power sequencing on CC2 is handled
+# via device-tree / regulator instead.
+CONFIG_PLATFORM_ALLWINNER_R528 ?= n
 CONFIG_PLATFORM_ROCKCHIP ?= n
 CONFIG_PLATFORM_ALLWINNER ?= n
 CONFIG_PLATFORM_AMLOGIC ?= n
