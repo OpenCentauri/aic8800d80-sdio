@@ -25,6 +25,28 @@
 #else
 #include "aicwf_usb.h"
 #endif
+
+static inline struct rwnx_hw *cmd_mgr_to_hw(struct rwnx_cmd_mgr *cmd_mgr)
+{
+#ifdef AICWF_SDIO_SUPPORT
+    struct aic_sdio_dev *sdiodev = container_of(cmd_mgr, struct aic_sdio_dev, cmd_mgr);
+    return sdiodev->rwnx_hw;
+#else
+    struct aic_usb_dev *usbdev = container_of(cmd_mgr, struct aic_usb_dev, cmd_mgr);
+    return usbdev->rwnx_hw;
+#endif
+}
+
+static inline int cmd_mgr_bus_up(struct rwnx_cmd_mgr *cmd_mgr)
+{
+#ifdef AICWF_SDIO_SUPPORT
+    struct aic_sdio_dev *sdiodev = container_of(cmd_mgr, struct aic_sdio_dev, cmd_mgr);
+    return sdiodev->bus_if->state == BUS_UP_ST;
+#else
+    struct aic_usb_dev *usbdev = container_of(cmd_mgr, struct aic_usb_dev, cmd_mgr);
+    return usbdev->bus_if->state == BUS_UP_ST;
+#endif
+}
 /**
  *
  */
@@ -61,7 +83,7 @@ static void cmd_complete(struct rwnx_cmd_mgr *cmd_mgr, struct rwnx_cmd *cmd)
     }
     
     if(cmd_mgr->queue_sz == 0){
-        rwnx_wakeup_unlock(g_rwnx_plat->usbdev->rwnx_hw->ws_tx);
+        rwnx_wakeup_unlock(cmd_mgr_to_hw(cmd_mgr)->ws_tx);
     }
 }
 
@@ -108,7 +130,7 @@ int cmd_mgr_queue_force_defer(struct rwnx_cmd_mgr *cmd_mgr, struct rwnx_cmd *cmd
 
     list_add_tail(&cmd->list, &cmd_mgr->cmds);
     if(cmd_mgr->queue_sz == 0){
-        rwnx_wakeup_lock(g_rwnx_plat->usbdev->rwnx_hw->ws_tx);
+        rwnx_wakeup_lock(cmd_mgr_to_hw(cmd_mgr)->ws_tx);
     }
     cmd_mgr->queue_sz++;
     spin_unlock_bh(&cmd_mgr->lock);
@@ -209,7 +231,7 @@ static int cmd_mgr_queue(struct rwnx_cmd_mgr *cmd_mgr, struct rwnx_cmd *cmd)
 
     list_add_tail(&cmd->list, &cmd_mgr->cmds);
     if(cmd_mgr->queue_sz == 0){
-        rwnx_wakeup_lock(g_rwnx_plat->usbdev->rwnx_hw->ws_tx);
+        rwnx_wakeup_lock(cmd_mgr_to_hw(cmd_mgr)->ws_tx);
     }
     cmd_mgr->queue_sz++;
 
@@ -282,11 +304,11 @@ static int cmd_mgr_queue(struct rwnx_cmd_mgr *cmd_mgr, struct rwnx_cmd *cmd)
 			list_del(&cmd->list);
 			cmd_mgr->queue_sz--;
 			if(cmd_mgr->queue_sz == 0){
-                rwnx_wakeup_unlock(usbdev->rwnx_hw->ws_tx);
+                rwnx_wakeup_unlock(cmd_mgr_to_hw(cmd_mgr)->ws_tx);
             }
 			spin_unlock_bh(&cmd_mgr->lock);
 			rwnx_cmd_free(cmd);//kfree(cmd);AIDEN
-            if(!list_empty(&cmd_mgr->cmds) && usbdev->state == USB_UP_ST)
+            if(!list_empty(&cmd_mgr->cmds) && cmd_mgr_bus_up(cmd_mgr))
                 WAKE_CMD_WORK(cmd_mgr);
 		}
         #endif
@@ -400,7 +422,7 @@ void cmd_mgr_task_process(struct work_struct *work)
 				list_del(&next->list);
 				cmd_mgr->queue_sz--;
 				if(cmd_mgr->queue_sz == 0){
-                    rwnx_wakeup_unlock(usbdev->rwnx_hw->ws_tx);
+                    rwnx_wakeup_unlock(cmd_mgr_to_hw(cmd_mgr)->ws_tx);
                 }
 				spin_unlock_bh(&cmd_mgr->lock);
 				rwnx_cmd_free(next);//kfree(next);AIDEN
@@ -520,7 +542,7 @@ static void cmd_mgr_drain(struct rwnx_cmd_mgr *cmd_mgr)
     spin_unlock_bh(&cmd_mgr->lock);
     #if 0
     if(cmd_mgr->queue_sz == 0){
-        rwnx_wakeup_unlock(g_rwnx_plat->usbdev->rwnx_hw->ws_tx);
+        rwnx_wakeup_unlock(cmd_mgr_to_hw(cmd_mgr)->ws_tx);
     }
 	#endif
 
