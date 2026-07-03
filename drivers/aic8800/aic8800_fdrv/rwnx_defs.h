@@ -47,58 +47,7 @@
 #include "usb_host.h"
 #endif
 
-#ifdef AICWF_USB_SUPPORT
-static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
-{
-	return rwnx_hw->usbdev->chipid;
-}
-static inline int rwnx_get_plat_chipid(void)
-{
-	return g_rwnx_plat->usbdev->chipid;
-}
-static inline int rwnx_bus_is_down(struct rwnx_hw *rwnx_hw)
-{
-	return rwnx_hw->usbdev->state == USB_DOWN_ST;
-}
-static inline int rwnx_plat_bus_is_down(struct rwnx_plat *plat)
-{
-	return plat->usbdev->state == USB_DOWN_ST;
-}
-#elif defined(AICWF_SDIO_SUPPORT)
-static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
-{
-	return rwnx_hw->sdiodev->chipid;
-}
-static inline int rwnx_get_plat_chipid(void)
-{
-	return g_rwnx_plat->sdiodev->chipid;
-}
-static inline int rwnx_bus_is_down(struct rwnx_hw *rwnx_hw)
-{
-	return rwnx_hw->sdiodev->bus_if->state == BUS_DOWN_ST;
-}
-static inline int rwnx_plat_bus_is_down(struct rwnx_plat *plat)
-{
-	return plat->sdiodev->bus_if->state == BUS_DOWN_ST;
-}
-#else
-static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
-{
-	return PRODUCT_ID_AIC8800D80N;
-}
-static inline int rwnx_get_plat_chipid(void)
-{
-	return PRODUCT_ID_AIC8800D80N;
-}
-static inline int rwnx_bus_is_down(struct rwnx_hw *rwnx_hw)
-{
-	return 0;
-}
-static inline int rwnx_plat_bus_is_down(struct rwnx_plat *plat)
-{
-	return 0;
-}
-#endif
+/* bus-type helpers are defined after struct rwnx_hw below */
 
 #ifdef CONFIG_BR_SUPPORT
 #include "aic_br_ext.h"
@@ -981,6 +930,59 @@ void rwnx_chanctx_link(struct rwnx_vif *vif, u8 idx,
                         struct cfg80211_chan_def *chandef);
 void rwnx_chanctx_unlink(struct rwnx_vif *vif);
 int  rwnx_chanctx_valid(struct rwnx_hw *rwnx_hw, u8 idx);
+
+#ifdef AICWF_USB_SUPPORT
+static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
+{
+	return rwnx_hw->usbdev->chipid;
+}
+static inline int rwnx_get_plat_chipid(void)
+{
+	return g_rwnx_plat->usbdev->chipid;
+}
+static inline int rwnx_bus_is_down(struct rwnx_hw *rwnx_hw)
+{
+	return rwnx_hw->usbdev->state == USB_DOWN_ST;
+}
+static inline int rwnx_plat_bus_is_down(struct rwnx_plat *plat)
+{
+	return plat->usbdev->state == USB_DOWN_ST;
+}
+#elif defined(AICWF_SDIO_SUPPORT)
+static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
+{
+	return rwnx_hw->sdiodev->chipid;
+}
+static inline int rwnx_get_plat_chipid(void)
+{
+	return g_rwnx_plat->sdiodev->chipid;
+}
+static inline int rwnx_bus_is_down(struct rwnx_hw *rwnx_hw)
+{
+	return rwnx_hw->sdiodev->bus_if->state == BUS_DOWN_ST;
+}
+static inline int rwnx_plat_bus_is_down(struct rwnx_plat *plat)
+{
+	return plat->sdiodev->bus_if->state == BUS_DOWN_ST;
+}
+#else
+static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
+{
+	return PRODUCT_ID_AIC8800D80N;
+}
+static inline int rwnx_get_plat_chipid(void)
+{
+	return PRODUCT_ID_AIC8800D80N;
+}
+static inline int rwnx_bus_is_down(struct rwnx_hw *rwnx_hw)
+{
+	return 0;
+}
+static inline int rwnx_plat_bus_is_down(struct rwnx_plat *plat)
+{
+	return 0;
+}
+#endif
 
 extern u8 chip_id;
 static inline bool is_multicast_sta(int sta_idx)

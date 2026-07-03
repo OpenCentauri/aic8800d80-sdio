@@ -1021,12 +1021,14 @@ struct aicwf_rx_priv *aicwf_rx_init(void *arg)
 #endif
     atomic_set(&rx_priv->rx_cnt, 0);
 
+#ifdef AICWF_USB_SUPPORT
 #ifdef CONFIG_USB_MSG_IN_EP
 	if(rx_priv->usbdev->msg_in_pipe){
-    	aicwf_frame_queue_init(&rx_priv->msg_rxq, 1, MAX_RXQLEN);
-    	spin_lock_init(&rx_priv->msg_rxqlock);
-    	atomic_set(&rx_priv->msg_rx_cnt, 0);
+   	aicwf_frame_queue_init(&rx_priv->msg_rxq, 1, MAX_RXQLEN);
+   	spin_lock_init(&rx_priv->msg_rxqlock);
+   	atomic_set(&rx_priv->msg_rx_cnt, 0);
 	}
+#endif
 #endif
 
 
@@ -1107,10 +1109,12 @@ void aicwf_rx_deinit(struct aicwf_rx_priv* rx_priv)
 
 #endif
 
+#ifdef AICWF_USB_SUPPORT
 #ifdef CONFIG_USB_MSG_IN_EP
 	if(rx_priv->usbdev->msg_in_pipe){
 		aicwf_frame_queue_flush(&rx_priv->msg_rxq);
 	}
+#endif
 #endif
 
 #ifdef CONFIG_PREALLOC_RX_SKB
