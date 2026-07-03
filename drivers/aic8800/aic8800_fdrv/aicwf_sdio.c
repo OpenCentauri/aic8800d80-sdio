@@ -1159,6 +1159,8 @@ int aicwf_sdio_func_init(struct aic_sdio_dev *sdiodev)
         sdio_release_host(sdiodev->func);
         return ret;
     }
+    host->ios.clock = 50000000;
+    host->ops->set_ios(host, &host->ios);
     sdio_release_host(sdiodev->func);
 
     ret = aicwf_sdio_writeb(sdiodev, SDIOWIFI_REGISTER_BLOCK, block_bit0);
