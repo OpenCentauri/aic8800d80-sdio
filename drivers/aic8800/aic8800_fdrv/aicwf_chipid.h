@@ -1,0 +1,21 @@
+/*
+ * aicwf_chipid.h
+ *
+ * Chip ID enum shared by USB and SDIO builds of the AIC8800 fullmac driver.
+ */
+
+#ifndef _AICWF_CHIPID_H_
+#define _AICWF_CHIPID_H_
+
+enum AICWF_IC{
+	PRODUCT_ID_AIC8801	=	0,
+	PRODUCT_ID_AIC8800DC,
+	PRODUCT_ID_AIC8800DW,
+	PRODUCT_ID_AIC8800DLN,
+	PRODUCT_ID_AIC8800D80N,
+	PRODUCT_ID_AIC8800D81,
+	PRODUCT_ID_AIC8800D81X2,
+	PRODUCT_ID_AIC8800D89X2
+};
+
+#endif

@@ -30,6 +30,7 @@
 #include "rwnx_platform.h"
 #include "rwnx_cmds.h"
 #include "rwnx_compat.h"
+#include "aicwf_chipid.h"
 #ifdef CONFIG_FILTER_TCP_ACK
 #include "aicwf_tcp_ack.h"
 #endif
@@ -44,6 +45,28 @@
 
 #ifdef AICWF_USB_SUPPORT
 #include "usb_host.h"
+#endif
+
+#ifdef AICWF_USB_SUPPORT
+static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
+{
+	return rwnx_hw->usbdev->chipid;
+}
+static inline int rwnx_get_plat_chipid(void)
+{
+	return g_rwnx_plat->usbdev->chipid;
+}
+#else
+/* SDIO-only path: CC2 uses AIC8800D80, which maps to the D80N enum value
+ * in this driver. */
+static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
+{
+	return PRODUCT_ID_AIC8800D80N;
+}
+static inline int rwnx_get_plat_chipid(void)
+{
+	return PRODUCT_ID_AIC8800D80N;
+}
 #endif
 
 #ifdef CONFIG_BR_SUPPORT
@@ -932,9 +955,9 @@ extern u8 chip_id;
 static inline bool is_multicast_sta(int sta_idx)
 {
 
-	if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) || 
-		((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-		g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+	if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) || 
+		((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+		rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
 		return (sta_idx >= NX_REMOTE_STA_MAX_FOR_OLD_IC);
 	}else{
 		return (sta_idx >= NX_REMOTE_STA_MAX);

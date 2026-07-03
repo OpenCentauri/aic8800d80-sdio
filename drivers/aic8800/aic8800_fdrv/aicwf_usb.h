@@ -11,6 +11,7 @@
 
 #include <linux/usb.h>
 #include "rwnx_cmds.h"
+#include "aicwf_chipid.h"
 
 #ifdef AICWF_USB_SUPPORT
 

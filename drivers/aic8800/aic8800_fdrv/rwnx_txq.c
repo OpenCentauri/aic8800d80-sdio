@@ -23,9 +23,9 @@ const int nx_tid_prio[NX_NB_TID_PER_STA] = {7, 6, 5, 4, 3, 0, 2, 1};
 static inline int rwnx_txq_sta_idx(struct rwnx_sta *sta, u8 tid)
 {
     if (is_multicast_sta(sta->sta_idx)){
-        if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) ||
-            ((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-            g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+        if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) ||
+            ((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+            rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
                 return NX_FIRST_VIF_TXQ_IDX_FOR_OLD_IC + sta->vif_idx;
         }else{
                 return NX_FIRST_VIF_TXQ_IDX + sta->vif_idx;
@@ -37,9 +37,9 @@ static inline int rwnx_txq_sta_idx(struct rwnx_sta *sta, u8 tid)
 
 static inline int rwnx_txq_vif_idx(struct rwnx_vif *vif, u8 type)
 {
-    if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) ||
-        ((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-        g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+    if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) ||
+        ((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+        rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
             return NX_FIRST_VIF_TXQ_IDX_FOR_OLD_IC + master_vif_idx(vif) + (type * NX_VIRT_DEV_MAX);
     }else{
         return NX_FIRST_VIF_TXQ_IDX + master_vif_idx(vif) + (type * NX_VIRT_DEV_MAX);
@@ -98,9 +98,9 @@ static void rwnx_txq_init(struct rwnx_txq *txq, int idx, u8 status,
     int nx_bcmc_txq_ndev_idx = NX_BCMC_TXQ_NDEV_IDX;
     int nx_first_vif_txq_idx = NX_FIRST_VIF_TXQ_IDX;
 	
-    if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) ||
-        ((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-        g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+    if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) ||
+        ((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+        rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
             nx_first_unk_txq_idx = NX_FIRST_UNK_TXQ_IDX_FOR_OLD_IC;
             nx_bcmc_txq_ndev_idx = NX_BCMC_TXQ_NDEV_IDX_FOR_OLD_IC;
             nx_first_vif_txq_idx = NX_FIRST_VIF_TXQ_IDX_FOR_OLD_IC;
@@ -344,9 +344,9 @@ void rwnx_txq_offchan_init(struct rwnx_vif *rwnx_vif)
     struct rwnx_txq *txq;
     int nx_off_chan_txq_idx = NX_OFF_CHAN_TXQ_IDX;
 
-    if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) ||
-        ((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-        g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+    if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) ||
+        ((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+        rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
             nx_off_chan_txq_idx = NX_OFF_CHAN_TXQ_IDX_FOR_OLD_IC;
     }
 
@@ -369,9 +369,9 @@ void rwnx_txq_offchan_deinit(struct rwnx_vif *rwnx_vif)
     struct rwnx_txq *txq;
     int nx_off_chan_txq_idx = NX_OFF_CHAN_TXQ_IDX;
 
-    if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) ||
-        ((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-        g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+    if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) ||
+        ((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+        rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
             nx_off_chan_txq_idx = NX_OFF_CHAN_TXQ_IDX_FOR_OLD_IC;
     }
 
@@ -753,9 +753,9 @@ void rwnx_txq_offchan_start(struct rwnx_hw *rwnx_hw)
     struct rwnx_txq *txq;
     int nx_off_chan_txq_idx = NX_OFF_CHAN_TXQ_IDX;
 
-    if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) ||
-        ((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-        g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+    if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) ||
+        ((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+        rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
             nx_off_chan_txq_idx = NX_OFF_CHAN_TXQ_IDX_FOR_OLD_IC;
     }
 

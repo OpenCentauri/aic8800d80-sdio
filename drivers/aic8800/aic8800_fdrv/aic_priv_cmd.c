@@ -2110,13 +2110,13 @@ int android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
 		goto exit;
 	}else if(!strncasecmp(command, CMD_SET_TESTMODE, strlen(CMD_SET_TESTMODE))){
 		if(g_rwnx_plat && g_rwnx_plat->usbdev->rwnx_hw){
-			if (g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW ||
-				(g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC) ||
-				(g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DLN) ||
-				(g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800D81) ||
-				(g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800D81X2) ||
-				(g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800D89X2) ||
-				(g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800D80N)){
+			if (rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW ||
+				(rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC) ||
+				(rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DLN) ||
+				(rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800D81) ||
+				(rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800D81X2) ||
+				(rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800D89X2) ||
+				(rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800D80N)){
 				set_testmode(!testmode);
 				rwnx_send_reboot(g_rwnx_plat->usbdev->rwnx_hw);
 			}

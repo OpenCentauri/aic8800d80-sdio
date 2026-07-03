@@ -297,9 +297,9 @@ u16 rwnx_select_txq(struct rwnx_vif *rwnx_vif, struct sk_buff *skb)
     bool tdls_mgmgt_frame = false;
     int nx_bcmc_txq_ndev_idx = NX_BCMC_TXQ_NDEV_IDX;
 
-    if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) || 
-        ((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-        g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+    if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) || 
+        ((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+        rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
             nx_bcmc_txq_ndev_idx = NX_BCMC_TXQ_NDEV_IDX_FOR_OLD_IC;
     }
 
@@ -508,9 +508,9 @@ static struct rwnx_sta *rwnx_get_tx_priv(struct rwnx_vif *rwnx_vif,
     int nx_remote_sta_max = NX_REMOTE_STA_MAX;
     int nx_bcmc_txq_ndev_idx = NX_BCMC_TXQ_NDEV_IDX;
 
-    if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) ||
-        ((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-        g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+    if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) ||
+        ((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+        rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
             nx_remote_sta_max = NX_REMOTE_STA_MAX_FOR_OLD_IC;
             nx_bcmc_txq_ndev_idx = NX_BCMC_TXQ_NDEV_IDX_FOR_OLD_IC;
     }
@@ -1672,9 +1672,9 @@ int rwnx_start_mgmt_xmit(struct rwnx_vif *vif, struct rwnx_sta *sta,
 
     //----------------------------------------------------------------------
 
-	if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) ||
-		((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-		g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+	if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) ||
+		((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+		rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
 		nx_off_chan_txq_idx = NX_OFF_CHAN_TXQ_IDX_FOR_OLD_IC;
 	}
 
@@ -2018,9 +2018,9 @@ netdev_tx_t rwnx_start_monitor_if_xmit(struct sk_buff *skb, struct net_device *d
 
     AICWFDBG(LOGINFO, "rwnx_start_monitor_if_xmit, skb_len=%d, rtap_len=%d\n", skb->len, rtap_len);
 //rwnx_data_dump((char*)__func__, skb->data, skb->len);
-    if((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8801) ||
-        ((g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-        g_rwnx_plat->usbdev->chipid == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
+    if((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8801) ||
+        ((rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DC ||
+        rwnx_get_plat_chipid() == PRODUCT_ID_AIC8800DW) && chip_id < 3)){
             nx_off_chan_txq_idx = NX_OFF_CHAN_TXQ_IDX_FOR_OLD_IC;
     }
 

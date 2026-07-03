@@ -721,7 +721,7 @@ static void rwnx_set_vht_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
         return;
     }
 
-    if(rwnx_hw->usbdev->chipid <= PRODUCT_ID_AIC8800D81)
+    if(rwnx_get_chipid(rwnx_hw) <= PRODUCT_ID_AIC8800D81)
         nss = 1;
 
 	rwnx_hw->vht_cap_2G.vht_supported = true;
@@ -739,8 +739,8 @@ static void rwnx_set_vht_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
 			rwnx_hw->vht_cap_2G.cap |= 3 << 13;
         #endif
 		}
-		if((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-		rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2) &&
+		if((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+		rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2) &&
 		rwnx_hw->mod_params->stbc_on == true){ //if (nss > 1)
 			rwnx_hw->vht_cap_2G.cap |= IEEE80211_VHT_CAP_TXSTBC;
 		}
@@ -836,8 +836,8 @@ static void rwnx_set_vht_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
 	        rwnx_hw->vht_cap_5G.cap |= 3 << 13;
 	        #endif
 	    }
-		if((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-		rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2) &&
+		if((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+		rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2) &&
 		rwnx_hw->mod_params->stbc_on == true){ //if (nss > 1)
 			rwnx_hw->vht_cap_5G.cap |= IEEE80211_VHT_CAP_TXSTBC;
 		}
@@ -936,7 +936,7 @@ static void rwnx_set_vht_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
         return;
     }
 
-    if(rwnx_hw->usbdev->chipid <= PRODUCT_ID_AIC8800D81){
+    if(rwnx_get_chipid(rwnx_hw) <= PRODUCT_ID_AIC8800D81){
         nss = 1;
     }
 
@@ -955,8 +955,8 @@ static void rwnx_set_vht_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
 			band_2GHz->vht_cap.cap |= 3 << 13;
         #endif
 		}
-		if((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-		rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2) &&
+		if((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+		rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2) &&
 		rwnx_hw->mod_params->stbc_on == true){ //if (nss > 1)
 			band_2GHz->vht_cap.cap |= IEEE80211_VHT_CAP_TXSTBC;
 		}
@@ -1052,8 +1052,8 @@ static void rwnx_set_vht_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
 	        #endif
 	    }
 
-		if((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-		rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2) &&
+		if((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+		rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2) &&
 		rwnx_hw->mod_params->stbc_on == true){ //if (nss > 1)
 			band_5GHz->vht_cap.cap |= IEEE80211_VHT_CAP_TXSTBC;
 		}
@@ -1154,7 +1154,7 @@ static void rwnx_set_ht_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
         return;
     }
 
-    if(rwnx_hw->usbdev->chipid <= PRODUCT_ID_AIC8800D81)
+    if(rwnx_get_chipid(rwnx_hw) <= PRODUCT_ID_AIC8800D81)
         nss = 1;
 
     if (rwnx_hw->mod_params->stbc_on)
@@ -1169,8 +1169,8 @@ static void rwnx_set_ht_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
         band_2GHz->ht_cap.mcs.rx_highest = cpu_to_le16(65 * nss);
     }
 
-	if((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-	rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2) &&
+	if((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+	rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2) &&
 	rwnx_hw->mod_params->stbc_on == true){ //if (nss > 1)
 		band_2GHz->ht_cap.cap |= IEEE80211_HT_CAP_TX_STBC;
 	}
@@ -1212,7 +1212,7 @@ static void rwnx_set_he_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
     int nss = rwnx_hw->mod_params->nss;
     int mcs_map;
 
-    if(rwnx_hw->usbdev->chipid <= PRODUCT_ID_AIC8800D81)
+    if(rwnx_get_chipid(rwnx_hw) <= PRODUCT_ID_AIC8800D81)
         nss = 1;
 
     he_cap = (struct ieee80211_sta_he_cap *) &rwnx_he_capa.he_cap;
@@ -1262,8 +1262,8 @@ static void rwnx_set_he_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
     if (rwnx_hw->mod_params->stbc_on)
         he_cap->he_cap_elem.phy_cap_info[2] |= IEEE80211_HE_PHY_CAP2_STBC_RX_UNDER_80MHZ;
 
-	if((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-	rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2) &&
+	if((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+	rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2) &&
 	rwnx_hw->mod_params->stbc_on == true){ //if (nss > 1)
 		he_cap->he_cap_elem.phy_cap_info[2] |= IEEE80211_HE_PHY_CAP2_STBC_TX_UNDER_80MHZ;
 	}
@@ -1359,7 +1359,7 @@ static void rwnx_set_he_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
         return;
     }
 
-    if(rwnx_hw->usbdev->chipid <= PRODUCT_ID_AIC8800D81)
+    if(rwnx_get_chipid(rwnx_hw) <= PRODUCT_ID_AIC8800D81)
         nss = 1;
 
     he_cap = (struct ieee80211_sta_he_cap *) &band_2GHz->iftype_data->he_cap;
@@ -1409,8 +1409,8 @@ static void rwnx_set_he_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
     if (rwnx_hw->mod_params->stbc_on)
         he_cap->he_cap_elem.phy_cap_info[2] |= IEEE80211_HE_PHY_CAP2_STBC_RX_UNDER_80MHZ;
 
-    if((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-	rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2) &&
+    if((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+	rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2) &&
 	rwnx_hw->mod_params->stbc_on == true){ //if (nss > 1)
 		he_cap->he_cap_elem.phy_cap_info[2] |= IEEE80211_HE_PHY_CAP2_STBC_TX_UNDER_80MHZ;
 	}
@@ -1452,8 +1452,8 @@ static void rwnx_set_he_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
     he_cap->he_cap_elem.phy_cap_info[9] |= IEEE80211_HE_PHY_CAP9_RX_FULL_BW_SU_USING_MU_WITH_COMP_SIGB |
                                            IEEE80211_HE_PHY_CAP9_RX_FULL_BW_SU_USING_MU_WITH_NON_COMP_SIGB;
     #endif
-	if (rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8801 || rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-        rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DW)
+	if (rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8801 || rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DC ||
+        rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DW)
         mcs_map = min_t(int, rwnx_hw->mod_params->he_mcs_map, IEEE80211_HE_MCS_SUPPORT_0_9);
 	else
 		mcs_map = rwnx_hw->mod_params->he_mcs_map;
@@ -1536,8 +1536,8 @@ static void rwnx_set_he_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
 	    if (rwnx_hw->mod_params->stbc_on)
 	        he_cap->he_cap_elem.phy_cap_info[2] |= IEEE80211_HE_PHY_CAP2_STBC_RX_UNDER_80MHZ;
 
-	    if((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-		rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2) &&
+	    if((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+		rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2) &&
 		rwnx_hw->mod_params->stbc_on == true){ //if (nss > 1)
 			he_cap->he_cap_elem.phy_cap_info[2] |= IEEE80211_HE_PHY_CAP2_STBC_TX_UNDER_80MHZ;
 		}
@@ -1579,8 +1579,8 @@ static void rwnx_set_he_capa(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
 	    he_cap->he_cap_elem.phy_cap_info[9] |= IEEE80211_HE_PHY_CAP9_RX_FULL_BW_SU_USING_MU_WITH_COMP_SIGB |
 	                                           IEEE80211_HE_PHY_CAP9_RX_FULL_BW_SU_USING_MU_WITH_NON_COMP_SIGB;
 	    #endif
-		if (rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8801 || rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-			rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DW)
+		if (rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8801 || rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DC ||
+			rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DW)
 			mcs_map = min_t(int, rwnx_hw->mod_params->he_mcs_map, IEEE80211_HE_MCS_SUPPORT_0_9);
 		else
 			mcs_map = rwnx_hw->mod_params->he_mcs_map;
@@ -1779,11 +1779,11 @@ int rwnx_handle_dynparams(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
 #endif
 
     //check he_mcs max
-    if(rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D81 &&
-        rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D81X2 &&
-        rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D89X2 &&
-        rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D80N &&
-        rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800DLN &&
+    if(rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D81 &&
+        rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D81X2 &&
+        rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D89X2 &&
+        rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D80N &&
+        rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800DLN &&
         rwnx_hw->mod_params->he_mcs_map > IEEE80211_HE_MCS_SUPPORT_0_9){
         rwnx_hw->mod_params->he_mcs_map = IEEE80211_HE_MCS_SUPPORT_0_9;
     } else {
@@ -1791,10 +1791,10 @@ int rwnx_handle_dynparams(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
     }
 
     //check use_80 support
-    if(rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D81 &&
-        rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D81X2 &&
-        rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D89X2 &&
-        rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D80N &&
+    if(rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D81 &&
+        rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D81X2 &&
+        rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D89X2 &&
+        rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D80N &&
         rwnx_hw->mod_params->use_80 == true){
         rwnx_hw->mod_params->use_80 = false;
     } else {
@@ -1802,9 +1802,9 @@ int rwnx_handle_dynparams(struct rwnx_hw *rwnx_hw, struct wiphy *wiphy)
     }
 
     //check sgi80 support
-    if(rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D81 &&
-        rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D81X2 &&
-        rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800D89X2 &&
+    if(rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D81 &&
+        rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D81X2 &&
+        rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800D89X2 &&
         rwnx_hw->mod_params->sgi80 == true){
         rwnx_hw->mod_params->sgi80 = false;
     } else {

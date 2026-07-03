@@ -1271,9 +1271,9 @@ int rwnx_send_rf_calib_req(struct rwnx_hw *rwnx_hw, struct mm_set_rf_calib_cfm *
     int error;
 
     RWNX_DBG(RWNX_FN_ENTRY_STR);
-	AICWFDBG(LOGINFO, "%s in,chipid=%d\n", __func__,rwnx_hw->usbdev->chipid);	
+	AICWFDBG(LOGINFO, "%s in,chipid=%d\n", __func__,rwnx_get_chipid(rwnx_hw));	
 	
-	if((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2) ||(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2))
+	if((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2) ||(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2))
 	{
 		struct mm_set_rf_calib_req_v2 *rf_calib_req;
 		struct mm_set_rf_calib_cfm_v2 cfm2;
@@ -1286,21 +1286,21 @@ int rwnx_send_rf_calib_req(struct rwnx_hw *rwnx_hw, struct mm_set_rf_calib_cfm *
 	        return -ENOMEM;
 	    }
 
-	    if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8801){
+	    if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8801){
 	        rf_calib_req->cal_cfg_24g = 0xbf;
 	        rf_calib_req->cal_cfg_5g = 0x3f;
-	    }else if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-	        rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DW){
+	    }else if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DC ||
+	        rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DW){
 	        rf_calib_req->cal_cfg_24g = 0x0f8f;
 	        rf_calib_req->cal_cfg_5g = 0;
-	    }else if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81){
+	    }else if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81){
 	        rf_calib_req->cal_cfg_24g = 0x0f8f;
 	        rf_calib_req->cal_cfg_5g = 0x0f0f;
-	    }else if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-	        rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2){
+	    }else if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+	        rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2){
 	        rf_calib_req->cal_cfg_24g = 0x0f8f;
 	        rf_calib_req->cal_cfg_5g = 0x0f0f;
-	    }else if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D80N){
+	    }else if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D80N){
 	        rf_calib_req->cal_cfg_24g = 0x0f8f;
 	        rf_calib_req->cal_cfg_5g = 0x0f0f;
 	    }
@@ -1462,21 +1462,21 @@ int rwnx_send_rf_calib_req(struct rwnx_hw *rwnx_hw, struct mm_set_rf_calib_cfm *
 	        return -ENOMEM;
 	    }
 
-	    if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8801){
+	    if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8801){
 	        rf_calib_req->cal_cfg_24g = 0xbf;
 	        rf_calib_req->cal_cfg_5g = 0x3f;
-	    }else if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-	        rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DW){
+	    }else if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DC ||
+	        rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DW){
 	        rf_calib_req->cal_cfg_24g = 0x0f8f;
 	        rf_calib_req->cal_cfg_5g = 0;
-	    }else if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81){
+	    }else if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81){
 	        rf_calib_req->cal_cfg_24g = 0x0f8f;
 	        rf_calib_req->cal_cfg_5g = 0x0f0f;
-	    }else if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-	        rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2){
+	    }else if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+	        rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2){
 	        rf_calib_req->cal_cfg_24g = 0x0f8f;
 	        rf_calib_req->cal_cfg_5g = 0x0f0f;
-	    } else if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D80N){
+	    } else if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D80N){
 	        rf_calib_req->cal_cfg_24g = 0x0f8f;
 	        rf_calib_req->cal_cfg_5g = 0x0f0f;
 	    }
@@ -1532,7 +1532,7 @@ int rwnx_send_get_sta_info_req(struct rwnx_hw *rwnx_hw, u8_l sta_idx, struct mm_
 	struct mm_get_sta_info_compat_req *get_info_compat_req;
 	int error;
 
-	if(rwnx_hw->usbdev->chipid < PRODUCT_ID_AIC8800D81X2) {
+	if(rwnx_get_chipid(rwnx_hw) < PRODUCT_ID_AIC8800D81X2) {
 		/* Build the MM_GET_STA_INFO_REQ message */
 		get_info_compat_req = rwnx_msg_zalloc(MM_GET_STA_INFO_REQ, TASK_MM, DRV_TASK_ID,
 							sizeof(struct mm_get_sta_info_compat_req));
@@ -1738,8 +1738,8 @@ int rwnx_send_vendor_hwconfig_req(struct rwnx_hw *rwnx_hw, uint32_t hwconfig_id,
 		error = rwnx_send_msg(rwnx_hw, req4, 1, MM_SET_VENDOR_HWCONFIG_CFM, NULL);
 		break;
         case CHIP_TEMP_GET_REQ:
-		if ((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DC) ||
-		(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DW))
+		if ((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DC) ||
+		(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DW))
 		{
 		struct mm_get_chip_temp_req *req;
 		struct mm_set_vendor_hwconfig_cfm cfm = {0,};
@@ -1981,8 +1981,8 @@ int rwnx_send_vendor_hwconfig_req_x2(struct rwnx_hw *rwnx_hw, uint32_t hwconfig_
 		error = rwnx_send_msg(rwnx_hw, req4, 1, MM_SET_VENDOR_HWCONFIG_CFM, NULL);
 		break;
         case CHIP_TEMP_GET_REQ_X2:
-        //if ((rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DC) ||
-        //    (rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DW))
+        //if ((rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DC) ||
+        //    (rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DW))
         {
             struct mm_get_chip_temp_req *req;
             struct mm_set_vendor_hwconfig_cfm cfm = {0,};
@@ -2437,7 +2437,7 @@ int rwnx_send_txpwr_lvl_req(struct rwnx_hw *rwnx_hw)
 				txpwr_lvl_v2->pwrlvl_11ax_2g4[i] -= txpwr_loss->loss_value_2g4;
 		}
 
-        if ((rwnx_hw->usbdev->chipid != PRODUCT_ID_AIC8800DLN) &&
+        if ((rwnx_get_chipid(rwnx_hw) != PRODUCT_ID_AIC8800DLN) &&
             (testmode == 0) && (chip_sub_id == 0)) {
             txpwr_lvl_req->txpwr_lvl.enable         = txpwr_lvl_v2->enable;
             txpwr_lvl_req->txpwr_lvl.dsss           = txpwr_lvl_v2->pwrlvl_11b_11ag_2g4[3]; // 11M
@@ -2871,10 +2871,10 @@ int rwnx_send_txpwr_ofst_req(struct rwnx_hw *rwnx_hw)
     txpwr_ofst->chan_100_120 = 0;
     txpwr_ofst->chan_122_140 = 0;
     txpwr_ofst->chan_142_165 = 0;
-	if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8801){
+	if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8801){
 		get_userconfig_txpwr_ofst(txpwr_ofst);
-	}else if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-		rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DW){
+	}else if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DC ||
+		rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DW){
 		get_userconfig_txpwr_ofst_in_fdrv(txpwr_ofst);
 	}
 	if(txpwr_ofst->enable){
@@ -2925,12 +2925,12 @@ int rwnx_send_txpwr_ofst2x_req(struct rwnx_hw *rwnx_hw)
             txpwr_ofst2x->pwrofst2x_tbl_5g[type][ch_grp] = 0;
         }
     }
-    if (rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81){
+    if (rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81){
         get_userconfig_txpwr_ofst2x_in_fdrv(txpwr_ofst2x);
-    } else if (rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D81X2 ||
-        rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D89X2){
+    } else if (rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D81X2 ||
+        rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D89X2){
         get_userconfig_txpwr_ofst2x_in_fdrv(txpwr_ofst2x);
-    } else if (rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800D80N) {
+    } else if (rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800D80N) {
         get_userconfig_txpwr_ofst2x_in_fdrv(txpwr_ofst2x);
     }
     if (txpwr_ofst2x->enable){
@@ -5193,8 +5193,8 @@ int rwnx_send_get_temp_req(struct rwnx_hw *rwnx_hw, s8_l *temp)
 
 	RWNX_DBG(RWNX_FN_ENTRY_STR);
 
-	if(rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DC ||
-		rwnx_hw->usbdev->chipid == PRODUCT_ID_AIC8800DW){
+	if(rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DC ||
+		rwnx_get_chipid(rwnx_hw) == PRODUCT_ID_AIC8800DW){
 		/* Build the CHIP_TEMP_GET_REQ message */
 		hwreq = rwnx_msg_zalloc(MM_SET_VENDOR_HWCONFIG_REQ, TASK_MM, DRV_TASK_ID, sizeof(struct mm_get_chip_temp_req));
 		if (!hwreq)
@@ -5210,7 +5210,7 @@ int rwnx_send_get_temp_req(struct rwnx_hw *rwnx_hw, s8_l *temp)
 			return ret;
 		}
 		return ret;
-	} else if (rwnx_hw->usbdev->chipid >= PRODUCT_ID_AIC8800D80N) {
+	} else if (rwnx_get_chipid(rwnx_hw) >= PRODUCT_ID_AIC8800D80N) {
 		/* Build the TEMP_COMP_GET_REQ message */
 		swreq = rwnx_msg_zalloc(MM_SET_VENDOR_SWCONFIG_REQ, TASK_MM, DRV_TASK_ID, sizeof(struct mm_set_vendor_swconfig_req));
 		if (!swreq) {
