@@ -20,6 +20,19 @@
 #ifdef CONFIG_RWNX_FULLMAC
 const int nx_tid_prio[NX_NB_TID_PER_STA] = {7, 6, 5, 4, 3, 0, 2, 1};
 
+static inline bool rwnx_txq_can_wake_subqueue(struct rwnx_hw *rwnx_hw)
+{
+#ifdef AICWF_USB_SUPPORT
+    return !rwnx_hw->usbdev->tbusy;
+#elif defined(AICWF_SDIO_SUPPORT)
+    /* ponytail: SDIO has no usbdev->tbusy; wake once firmware has room again. */
+    return !rwnx_hw->sdiodev || !rwnx_hw->sdiodev->tx_priv ||
+           READ_ONCE(rwnx_hw->sdiodev->tx_priv->fw_avail_bufcnt) > 0;
+#else
+    return true;
+#endif
+}
+
 static inline int rwnx_txq_sta_idx(struct rwnx_sta *sta, u8 tid)
 {
     if (is_multicast_sta(sta->sta_idx)){
@@ -862,12 +875,17 @@ int rwnx_txq_queue_skb(struct sk_buff *skb, struct rwnx_txq *txq,
 #ifdef AICWF_USB_SUPPORT
     spin_lock_irqsave(&rwnx_hw->usbdev->tx_flow_lock, flags);
     if ((txq->ndev_idx != NDEV_NO_TXQ) && !rwnx_hw->usbdev->tbusy && ((skb_queue_len(&txq->sk_list) > RWNX_NDEV_FLOW_CTRL_STOP))) {
+#else
+    if ((txq->ndev_idx != NDEV_NO_TXQ) &&
+        (skb_queue_len(&txq->sk_list) > RWNX_NDEV_FLOW_CTRL_STOP)) {
+#endif
         txq->status |= RWNX_TXQ_NDEV_FLOW_CTRL;
         netif_stop_subqueue(txq->ndev, txq->ndev_idx);
 #ifdef CREATE_TRACE_POINTS
         trace_txq_flowctrl_stop(txq);
 #endif
     }
+#ifdef AICWF_USB_SUPPORT
     spin_unlock_irqrestore(&rwnx_hw->usbdev->tx_flow_lock, flags);
 #endif
 
@@ -1308,15 +1326,17 @@ void rwnx_hwq_process(struct rwnx_hw *rwnx_hw, struct rwnx_hwq *hwq)
         /* restart netdev queue if number of queued buffer is below threshold */
 #ifdef AICWF_USB_SUPPORT
 	    spin_lock_irqsave(&rwnx_hw->usbdev->tx_flow_lock, flags);
+#endif
 		if (unlikely(txq->status & RWNX_TXQ_NDEV_FLOW_CTRL) &&
 			skb_queue_len(&txq->sk_list) < RWNX_NDEV_FLOW_CTRL_RESTART) {
             txq->status &= ~RWNX_TXQ_NDEV_FLOW_CTRL;
-	    if(!rwnx_hw->usbdev->tbusy)
+	    if (rwnx_txq_can_wake_subqueue(rwnx_hw))
 		netif_wake_subqueue(txq->ndev, txq->ndev_idx);
 #ifdef CREATE_TRACE_POINTS
             trace_txq_flowctrl_restart(txq);
 #endif
         }
+#ifdef AICWF_USB_SUPPORT
 	spin_unlock_irqrestore(&rwnx_hw->usbdev->tx_flow_lock, flags);
 #endif
 #endif /* CONFIG_ONE_TXQ */

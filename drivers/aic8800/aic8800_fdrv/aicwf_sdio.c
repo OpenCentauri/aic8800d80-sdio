@@ -124,6 +124,11 @@ static int aicwf_sdio_probe(struct sdio_func *func,
     if(func->num != 1) {
         return err;
     }
+    if (func->vendor != SDIO_VENDOR_ID_AIC) {
+        dev_err(&func->dev, "unsupported SDIO device %04x:%04x\n",
+                func->vendor, func->device);
+        return err;
+    }
 
     bus_if = kzalloc(sizeof(struct aicwf_bus), GFP_KERNEL);
     if (!bus_if) {
@@ -137,7 +142,10 @@ static int aicwf_sdio_probe(struct sdio_func *func,
         kfree(bus_if);
         return -ENOMEM;
     }
+    /* ponytail: CC2 ships D80N today; fail fast on the vendor, assume family here. */
     sdiodev->chipid = PRODUCT_ID_AIC8800D80N;
+    dev_info(&func->dev, "probing SDIO %04x:%04x as AIC8800D80N\n",
+             func->vendor, func->device);
 
     sdiodev->func = func;
     sdiodev->bus_if = bus_if;

@@ -20,6 +20,12 @@ extern void get_fw_path(char* fw_path);
 extern int testmode;
 extern char aic_fw_path[200];
 
+#ifdef ANDROID_PLATFORM
+#define AIC_DEFAULT_FW_PATH "/vendor/etc/firmware"
+#else
+#define AIC_DEFAULT_FW_PATH "/lib/firmware"
+#endif
+
 int rwnx_init_aic(struct rwnx_hw *rwnx_hw)
 {
     RWNX_DBG(RWNX_FN_ENTRY_STR);
@@ -33,6 +39,8 @@ int rwnx_init_aic(struct rwnx_hw *rwnx_hw)
 	testmode = get_testmode();
 	memset(aic_fw_path, 0, 200);
 	get_fw_path(aic_fw_path);
+	if (!aic_fw_path[0])
+		strscpy(aic_fw_path, AIC_DEFAULT_FW_PATH, sizeof(aic_fw_path));
 	
     return 0;
 }
