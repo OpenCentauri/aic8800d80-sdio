@@ -53,7 +53,7 @@ int aicwf_sdio_flow_ctrl(struct aic_sdio_dev *sdiodev)
     u32 count = 0;
 
     while (true) {
-        ret = aicwf_sdio_readb(sdiodev, SDIOWIFI_FLOW_CTRL_REG, &fc_reg);
+        ret = aicwf_sdio_readb(sdiodev, sdiodev->sdio_reg.flow_ctrl_reg, &fc_reg);
         if (ret) {
             return -1;
         }
@@ -84,7 +84,7 @@ int aicwf_sdio_send_pkt(struct aic_sdio_dev *sdiodev, u8 *buf, uint count)
     int ret = 0;
 
     sdio_claim_host(sdiodev->func);
-    ret = sdio_writesb(sdiodev->func, 7, buf, count);
+    ret = sdio_writesb(sdiodev->func, sdiodev->sdio_reg.wr_fifo_addr, buf, count);
     sdio_release_host(sdiodev->func);
 
     return ret;
@@ -100,7 +100,7 @@ int aicwf_sdio_recv_pkt(struct aic_sdio_dev *sdiodev, struct sk_buff *skbbuf,
     }
 
     sdio_claim_host(sdiodev->func);
-    ret = sdio_readsb(sdiodev->func, skbbuf->data, 8, size);
+    ret = sdio_readsb(sdiodev->func, skbbuf->data, sdiodev->sdio_reg.rd_fifo_addr, size);
     sdio_release_host(sdiodev->func);
 
     if (ret < 0) {
@@ -153,6 +153,7 @@ static int aicwf_sdio_probe(struct sdio_func *func,
     bus_if->bus_priv.sdio = sdiodev;
     dev_set_drvdata(&func->dev, bus_if);
     sdiodev->dev = &func->dev;
+    aicwf_sdio_reg_init(sdiodev);
     err = aicwf_sdio_func_init(sdiodev);
     if (err < 0) {
         sdio_err("sdio func init fail\n");
@@ -379,7 +380,7 @@ int aicwf_sdio_wakeup(struct aic_sdio_dev *sdiodev)
             }
             sdio_dbg("w\n");
             while(write_retry) {
-                ret = aicwf_sdio_writeb(sdiodev, SDIOWIFI_WAKEUP_REG, 1);
+                ret = aicwf_sdio_writeb(sdiodev, sdiodev->sdio_reg.wakeup_reg, 1);
                 if (ret) {
                     txrx_err("sdio wakeup fail\n");
                     ret = -1;
@@ -387,7 +388,7 @@ int aicwf_sdio_wakeup(struct aic_sdio_dev *sdiodev)
                     read_retry=10;
                     while (read_retry) {
                         u8 val;
-                        ret = aicwf_sdio_readb(sdiodev, SDIOWIFI_SLEEP_REG, &val);
+                        ret = aicwf_sdio_readb(sdiodev, sdiodev->sdio_reg.sleep_reg, &val);
                         if (ret==0 && val&0x10) {
                             break;
                         }
@@ -419,7 +420,7 @@ int aicwf_sdio_sleep_allow(struct aic_sdio_dev *sdiodev)
     struct rwnx_vif *rwnx_vif, *tmp;
 
     if (bus_if->state == BUS_DOWN_ST) {
-        ret = aicwf_sdio_writeb(sdiodev, SDIOWIFI_SLEEP_REG, 0x10);
+        ret = aicwf_sdio_writeb(sdiodev, sdiodev->sdio_reg.sleep_reg, 0x10);
         if (ret) {
             sdio_err("Write sleep fail!\n");
     }
@@ -450,7 +451,7 @@ int aicwf_sdio_sleep_allow(struct aic_sdio_dev *sdiodev)
         down(&sdiodev->pwrctl_wakeup_sema);
         if (rwnx_hw->vif_started) {
             sdio_dbg("s\n");
-            ret = aicwf_sdio_writeb(sdiodev, SDIOWIFI_SLEEP_REG, 0x10);
+            ret = aicwf_sdio_writeb(sdiodev, sdiodev->sdio_reg.sleep_reg, 0x10);
             if (ret)
                	sdio_err("Write sleep fail!\n");
         }
@@ -524,7 +525,7 @@ static int aicwf_sdio_intr_get_len_bytemode(struct aic_sdio_dev *sdiodev, u8 *by
     if (sdiodev->bus_if->state == BUS_DOWN_ST) {
         *byte_len = 0;
     } else {
-        ret = aicwf_sdio_readb(sdiodev, SDIOWIFI_BYTEMODE_LEN_REG, byte_len);
+        ret = aicwf_sdio_readb(sdiodev, sdiodev->sdio_reg.bytemode_len_reg, byte_len);
         sdiodev->rx_priv->data_len = (*byte_len)*4;
     }
 
@@ -920,7 +921,7 @@ static int aicwf_sdio_bus_start(struct device *dev)
     sdiodev->func->irq_handler = (sdio_irq_handler_t *)aicwf_sdio_hal_irqhandler;
 #endif
     //enable sdio interrupt
-    ret = aicwf_sdio_writeb(sdiodev, SDIOWIFI_INTR_CONFIG_REG, 0x07);
+    ret = aicwf_sdio_writeb(sdiodev, sdiodev->sdio_reg.intr_config_reg, 0x07);
     sdio_release_host(sdiodev->func);
 
     if (ret != 0)
@@ -1057,10 +1058,10 @@ void aicwf_sdio_hal_irqhandler(struct sdio_func *func)
         return;
     }
 
-    ret = aicwf_sdio_readb(sdiodev, SDIOWIFI_BLOCK_CNT_REG, &intstatus);
+    ret = aicwf_sdio_readb(sdiodev, sdiodev->sdio_reg.block_cnt_reg, &intstatus);
     while(ret || (intstatus & SDIO_OTHER_INTERRUPT)) {
         sdio_err("ret=%d, intstatus=%x\r\n",ret, intstatus);
-        ret = aicwf_sdio_readb(sdiodev, SDIOWIFI_BLOCK_CNT_REG, &intstatus);
+        ret = aicwf_sdio_readb(sdiodev, sdiodev->sdio_reg.block_cnt_reg, &intstatus);
     }
     sdiodev->rx_priv->data_len = intstatus * SDIOWIFI_FUNC_BLOCKSIZE;
 
@@ -1120,9 +1121,9 @@ void aicwf_sdio_release(struct aic_sdio_dev *sdiodev)
 
     sdio_claim_host(sdiodev->func);
     //disable sdio interrupt
-    ret = aicwf_sdio_writeb(sdiodev, SDIOWIFI_INTR_CONFIG_REG, 0x0);
+    ret = aicwf_sdio_writeb(sdiodev, sdiodev->sdio_reg.intr_config_reg, 0x0);
     if (ret < 0) {
-        sdio_err("reg:%d write failed!\n", SDIOWIFI_INTR_CONFIG_REG);
+        sdio_err("reg:%d write failed!\n", sdiodev->sdio_reg.intr_config_reg);
     }
     sdio_release_irq(sdiodev->func);
     sdio_release_host(sdiodev->func);
@@ -1136,6 +1137,40 @@ void aicwf_sdio_release(struct aic_sdio_dev *sdiodev)
         aicwf_rx_deinit(rx_priv);
     rwnx_cmd_mgr_deinit(&sdiodev->cmd_mgr);
     sdio_dbg("exit %s\n", __func__);
+}
+
+
+void aicwf_sdio_reg_init(struct aic_sdio_dev *sdiodev)
+{
+    struct aic_sdio_reg *reg = &sdiodev->sdio_reg;
+
+    if (sdiodev->chipid == PRODUCT_ID_AIC8800D80N) {
+        /* D80/D80N v3 SDIO register layout */
+        reg->bytemode_len_reg    = SDIOWIFI_BYTEMODE_LEN_REG_V3;
+        reg->intr_config_reg     = SDIOWIFI_INTR_ENABLE_REG_V3;
+        reg->sleep_reg           = SDIOWIFI_INTR_PENDING_REG_V3;
+        reg->wakeup_reg          = SDIOWIFI_INTR_TO_DEVICE_REG_V3;
+        reg->flow_ctrl_reg       = SDIOWIFI_FLOW_CTRL_Q1_REG_V3;
+        reg->register_block      = 0; /* not used on v3 */
+        reg->bytemode_enable_reg = SDIOWIFI_BYTEMODE_ENABLE_REG_V3;
+        reg->block_cnt_reg       = SDIOWIFI_MISC_INT_STATUS_REG_V3;
+        reg->misc_int_status_reg = SDIOWIFI_MISC_INT_STATUS_REG_V3;
+        reg->rd_fifo_addr        = SDIOWIFI_RD_FIFO_ADDR_V3;
+        reg->wr_fifo_addr        = SDIOWIFI_WR_FIFO_ADDR_V3;
+    } else {
+        /* v1 SDIO register layout for 8801/8800DC/DW */
+        reg->bytemode_len_reg    = SDIOWIFI_BYTEMODE_LEN_REG;
+        reg->intr_config_reg     = SDIOWIFI_INTR_CONFIG_REG;
+        reg->sleep_reg           = SDIOWIFI_SLEEP_REG;
+        reg->wakeup_reg          = SDIOWIFI_WAKEUP_REG;
+        reg->flow_ctrl_reg       = SDIOWIFI_FLOW_CTRL_REG;
+        reg->register_block      = SDIOWIFI_REGISTER_BLOCK;
+        reg->bytemode_enable_reg = SDIOWIFI_BYTEMODE_ENABLE_REG;
+        reg->block_cnt_reg       = SDIOWIFI_BLOCK_CNT_REG;
+        reg->misc_int_status_reg = SDIOWIFI_BLOCK_CNT_REG;
+        reg->rd_fifo_addr        = 0x08;
+        reg->wr_fifo_addr        = 0x07;
+    }
 }
 
 int aicwf_sdio_func_init(struct aic_sdio_dev *sdiodev)
@@ -1159,21 +1194,45 @@ int aicwf_sdio_func_init(struct aic_sdio_dev *sdiodev)
         sdio_release_host(sdiodev->func);
         return ret;
     }
-    host->ios.clock = 50000000;
-    host->ops->set_ios(host, &host->ios);
+    if (sdiodev->chipid != PRODUCT_ID_AIC8800D80N) {
+        host->ios.clock = 50000000;
+        host->ops->set_ios(host, &host->ios);
+    }
     sdio_release_host(sdiodev->func);
 
-    ret = aicwf_sdio_writeb(sdiodev, SDIOWIFI_REGISTER_BLOCK, block_bit0);
-    if (ret < 0) {
-        sdio_err("reg:%d write failed!\n", SDIOWIFI_REGISTER_BLOCK);
-        return ret;
+    if (sdiodev->sdio_reg.register_block) {
+        ret = aicwf_sdio_writeb(sdiodev, sdiodev->sdio_reg.register_block, block_bit0);
+        if (ret < 0) {
+            sdio_err("reg:%d write failed!\n", sdiodev->sdio_reg.register_block);
+            return ret;
+        }
     }
 
     //1: no byte mode
-    ret = aicwf_sdio_writeb(sdiodev, SDIOWIFI_BYTEMODE_ENABLE_REG, byte_mode_disable);
+    ret = aicwf_sdio_writeb(sdiodev, sdiodev->sdio_reg.bytemode_enable_reg, byte_mode_disable);
     if (ret < 0) {
-        sdio_err("reg:%d write failed!\n", SDIOWIFI_BYTEMODE_ENABLE_REG);
+        sdio_err("reg:%d write failed!\n", sdiodev->sdio_reg.bytemode_enable_reg);
         return ret;
+    }
+
+    /* v3 D80/D80N needs a wakeup pulse after byte-mode disable */
+    if (sdiodev->chipid == PRODUCT_ID_AIC8800D80N) {
+        u8 val = 0;
+        ret = aicwf_sdio_writeb(sdiodev, sdiodev->sdio_reg.wakeup_reg, 0x11);
+        if (ret < 0) {
+            sdio_err("reg:%d write failed!\n", sdiodev->sdio_reg.wakeup_reg);
+            return ret;
+        }
+        mdelay(5);
+        ret = aicwf_sdio_readb(sdiodev, sdiodev->sdio_reg.sleep_reg, &val);
+        if (ret < 0) {
+            sdio_err("reg:%d read failed!\n", sdiodev->sdio_reg.sleep_reg);
+            return ret;
+        }
+        if (!(val & 0x10))
+            sdio_err("wakeup fail\n");
+        else
+            sdio_dbg("sdio ready\n");
     }
 
     return ret;

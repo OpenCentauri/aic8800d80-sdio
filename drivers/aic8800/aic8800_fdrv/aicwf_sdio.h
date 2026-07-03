@@ -33,6 +33,35 @@
 #define SDIOWIFI_BLOCK_CNT_REG          0x12
 #define SDIOWIFI_FLOWCTRL_MASK_REG      0x7F
 
+/* D80 (D80N) uses a different SDIO register layout (v3) */
+#define SDIOWIFI_INTR_ENABLE_REG_V3     0x00
+#define SDIOWIFI_INTR_PENDING_REG_V3    0x01
+#define SDIOWIFI_INTR_TO_DEVICE_REG_V3  0x02
+#define SDIOWIFI_FLOW_CTRL_Q1_REG_V3    0x03
+#define SDIOWIFI_MISC_INT_STATUS_REG_V3 0x04
+#define SDIOWIFI_BYTEMODE_LEN_REG_V3    0x05
+#define SDIOWIFI_BYTEMODE_LEN_MSB_REG_V3 0x06
+#define SDIOWIFI_BYTEMODE_ENABLE_REG_V3 0x07
+#define SDIOWIFI_MISC_CTRL_REG_V3       0x08
+#define SDIOWIFI_FLOW_CTRL_Q2_REG_V3    0x09
+#define SDIOWIFI_CLK_TEST_RESULT_REG_V3 0x0A
+#define SDIOWIFI_RD_FIFO_ADDR_V3        0x0F
+#define SDIOWIFI_WR_FIFO_ADDR_V3        0x10
+
+struct aic_sdio_reg {
+    u8 bytemode_len_reg;
+    u8 intr_config_reg;
+    u8 sleep_reg;
+    u8 wakeup_reg;
+    u8 flow_ctrl_reg;
+    u8 register_block;
+    u8 bytemode_enable_reg;
+    u8 block_cnt_reg;
+    u8 misc_int_status_reg;
+    u8 rd_fifo_addr;
+    u8 wr_fifo_addr;
+};
+
 #define SDIOWIFI_PWR_CTRL_INTERVAL      30
 #define FLOW_CTRL_RETRY_COUNT           50
 #define BUFFER_SIZE                     1536
@@ -65,6 +94,8 @@ struct aic_sdio_dev {
 	struct aicwf_tx_priv *tx_priv;
 	u32 state;
 
+	struct aic_sdio_reg sdio_reg;
+
     //for sdio pwr ctrl
     struct timer_list timer;
     uint active_duration;
@@ -73,6 +104,7 @@ struct aic_sdio_dev {
     spinlock_t pwrctl_lock;
     struct semaphore pwrctl_wakeup_sema;
 };
+void aicwf_sdio_reg_init(struct aic_sdio_dev *sdiodev);
 int aicwf_sdio_writeb(struct aic_sdio_dev *sdiodev, uint regaddr, u8 val);
 void aicwf_sdio_hal_irqhandler(struct sdio_func *func);
 void aicwf_sdio_pwrctl_timer(struct aic_sdio_dev *sdiodev, uint duration);
