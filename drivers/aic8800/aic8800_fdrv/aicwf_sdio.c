@@ -137,6 +137,7 @@ static int aicwf_sdio_probe(struct sdio_func *func,
         kfree(bus_if);
         return -ENOMEM;
     }
+    sdiodev->chipid = PRODUCT_ID_AIC8800D80N;
 
     sdiodev->func = func;
     sdiodev->bus_if = bus_if;
@@ -527,7 +528,7 @@ static void aicwf_sdio_bus_stop(struct device *dev)
 
     aicwf_sdio_pwrctl_timer(sdiodev, 0);
     if(timer_pending(&sdiodev->rwnx_hw->p2p_alive_timer)){
-        ret = del_timer(&sdiodev->rwnx_hw->p2p_alive_timer);}
+        ret = timer_delete(&sdiodev->rwnx_hw->p2p_alive_timer);}
     sdio_dbg("%s\n",__func__);
     if (sdiodev->pwrctl_tsk) {
         complete(&sdiodev->pwrctrl_trgg);
@@ -1082,7 +1083,7 @@ void aicwf_sdio_pwrctl_timer(struct aic_sdio_dev *sdiodev, uint duration)
     spin_lock_bh(&sdiodev->pwrctl_lock);
     if (!duration) {
         if (timer_pending(&sdiodev->timer))
-            del_timer_sync(&sdiodev->timer);
+            timer_delete_sync(&sdiodev->timer);
     } else {
         sdiodev->active_duration = duration;
         timeout = msecs_to_jiffies(sdiodev->active_duration);

@@ -50,15 +50,16 @@ struct rwnx_hw;
 
 
 struct aic_sdio_dev {
-    struct rwnx_hw *rwnx_hw;
-    struct sdio_func *func;
-    struct device *dev;
-    struct aicwf_bus *bus_if;
-    struct rwnx_cmd_mgr cmd_mgr;
+	struct rwnx_hw *rwnx_hw;
+	struct sdio_func *func;
+	struct device *dev;
+	u16 chipid;
+	struct aicwf_bus *bus_if;
+	struct rwnx_cmd_mgr cmd_mgr;
 
-    struct aicwf_rx_priv *rx_priv;
-    struct aicwf_tx_priv *tx_priv;
-    u32 state;
+	struct aicwf_rx_priv *rx_priv;
+	struct aicwf_tx_priv *tx_priv;
+	u32 state;
 
     //for sdio pwr ctrl
     struct timer_list timer;

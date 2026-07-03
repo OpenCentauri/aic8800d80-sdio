@@ -56,9 +56,16 @@ static inline int rwnx_get_plat_chipid(void)
 {
 	return g_rwnx_plat->usbdev->chipid;
 }
+#elif defined(AICWF_SDIO_SUPPORT)
+static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
+{
+	return rwnx_hw->sdiodev->chipid;
+}
+static inline int rwnx_get_plat_chipid(void)
+{
+	return g_rwnx_plat->sdiodev->chipid;
+}
 #else
-/* SDIO-only path: CC2 uses AIC8800D80, which maps to the D80N enum value
- * in this driver. */
 static inline int rwnx_get_chipid(struct rwnx_hw *rwnx_hw)
 {
 	return PRODUCT_ID_AIC8800D80N;
